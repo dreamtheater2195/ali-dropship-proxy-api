@@ -3,7 +3,7 @@ const axios = require("axios");
 const getAccessToken = () => {
   return axios({
     url: "https://api.sandbox.paypal.com/v1/oauth2/token",
-    method: "post",
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Accept-Language": "en_US",
