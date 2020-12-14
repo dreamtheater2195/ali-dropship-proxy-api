@@ -1,17 +1,13 @@
 # paypal-pcp-proxy-api
-
-A barebones Node.js app using [Express 4](http://expressjs.com/).
-
 ## Running Locally
 
 Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
-And a MongoDB have two collection `product` and `order`
 
 ```sh
 $ git clone https://github.com/dreamtheater2195/paypal-pcp-proxy-api # or clone your own fork
 $ cd paypal-pcp-proxy-api
 $ npm install
-$ cp .env.example .env # may you need update `MONGODB_URI`
+$ cp .env.example .env # may you need to update `MONGODB_URI`
 $ npm start # or `heroku local`, If you used heroku already
 ```
 
