@@ -5,6 +5,8 @@ const express = require("express"),
   mongoose = require("mongoose"),
   db = require("./models");
 
+const { getMerchantIntegration } = require("./paypal_sdk");
+
 // create express app
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,55 +35,34 @@ app.get(
   async (req, res) => {
     const { partner_id, merchant_id } = req.params;
     try {
-      //get merchant
-      let merchant = await db.Merchant.findOne({});
-      if (merchant) {
-        console.log('Found one merchant')
-        return res.json(merchant);
+      if (process.env.PROXY_ONLY === "true") {
+        const response = await getMerchantIntegration(partner_id, merchant_id);
+        return res.json(response.data);
       }
 
-      // if no merchant found, insert one to db
-      const m = new db.Merchant({
-        merchant_id: merchant_id,
-        tracking_id: "10058574-490f3efd6aca4cefa64f0cc3866a4936",
-        products: [
-          {
-            name: "MOBILE_PAYMENT_ACCEPTANCE",
-            status: "ACTIVE",
-          },
-        ],
-        payments_receivable: true,
-        primary_email: "sb-s1uac4062835@business.example.com",
-        primary_email_confirmed: true,
-        oauth_integrations: [
-          {
-            integration_type: "OAUTH_THIRD_PARTY",
-            integration_method: "PAYPAL",
-            oauth_third_party: [
-              {
-                partner_client_id: "abcxyz",
-                merchant_client_id: "xyzabc",
-                scopes: [
-                  "https://uri.paypal.com/services/payments/realtimepayment",
-                  "https://uri.paypal.com/services/payments/refund",
-                  "https://uri.paypal.com/services/customer/merchant-integrations/read",
-                  "https://uri.paypal.com/services/disputes/update-seller",
-                  "https://uri.paypal.com/services/payments/payment/authcapture",
-                  "https://uri.paypal.com/services/disputes/read-seller",
-                  "https://uri.paypal.com/services/shipping/trackers/readwrite",
-                ],
-              },
-            ],
-          },
-        ],
-        primary_currency: "USD",
-        country: "US",
-      })
-      merchant = await m.save()
-      console.log('Saved merchant, id: ', merchant._id)
-      res.json(merchant)
-    } catch (err) {
-      res.status(500).send(err);
+      // get from db
+      let merchant = await db.Merchant.findOne({ merchant_id });
+      if (merchant) {
+        return res.json(merchant);
+      }
+      const response = await getMerchantIntegration(partner_id, merchant_id);
+
+      // save to db for later request
+      merchant = new db.Merchant(response.data);
+      savedMerchant = await merchant.save();
+      res.json(merchant);
+
+    } catch (error) {
+      if (error.response) {
+        return res.status(error.response.status).send(error.response.data);
+      }
+      if (error.request) {
+        return res.status(404).send(error.request);
+      }
+      if (error.message) {
+        return res.status(404).send(error.message);
+      }
+      return res.status(500).send(error);
     }
   }
 );
