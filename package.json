@@ -1,5 +1,5 @@
 {
-  "name": "ali-proxy-api",
+  "name": "paypal-pcp-proxy-api",
   "version": "0.0.1",
   "description": "A sample Node.js app using Express 4",
   "engines": {
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dzungtran/ali-dropship-proxy-api.git"
+    "url": "git+https://github.com/dreamtheater2195/paypal-pcp-proxy-api.git"
   },
   "keywords": [
     "node",
@@ -33,8 +33,8 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dzungtran/ali-dropship-proxy-api/issues"
+    "url": "https://github.com/dreamtheater2195/paypal-pcp-proxy-api/issues"
   },
-  "homepage": "https://github.com/dzungtran/ali-dropship-proxy-api#readme",
+  "homepage": "https://github.com/dreamtheater2195/paypal-pcp-proxy-api#readme",
   "author": "hello@iamdzung.com"
 }

@@ -1,4 +1,4 @@
-# ali-dropship-proxy-api
+# paypal-pcp-proxy-api
 
 A barebones Node.js app using [Express 4](http://expressjs.com/).
 
@@ -8,8 +8,8 @@ Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cl
 And a MongoDB have two collection `product` and `order`
 
 ```sh
-$ git clone https://github.com/dzungtran/ali-dropship-proxy-api.git # or clone your own fork
-$ cd ali-dropship-proxy-api
+$ git clone https://github.com/dreamtheater2195/paypal-pcp-proxy-api # or clone your own fork
+$ cd paypal-pcp-proxy-api
 $ npm install
 $ cp .env.example .env # may you need update `MONGODB_URI`
 $ npm start # or `heroku local`, If you used heroku already

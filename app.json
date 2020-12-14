@@ -1,7 +1,7 @@
 {
-  "name": "AliExpress Proxy API",
-  "description": "A simple proxy for aliexpress app testing",
-  "repository": "https://github.com/dzungtran/ali-dropship-proxy-api",
+  "name": "Paypal PCP Proxy API",
+  "description": "A simple proxy for paypal pcp app testing",
+  "repository": "https://github.com/dreamtheater2195/paypal-pcp-proxy-api",
   "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
   "keywords": ["node", "express", "heroku"],
   "image": "heroku/nodejs"
