@@ -21,6 +21,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => console.log("connection successful"))
   .catch((err) => console.error(err));
@@ -46,25 +47,31 @@ app.get(
   async (req, res) => {
     const { partner_id, merchant_id } = req.params;
     try {
+      // proxy only
       if (process.env.PROXY_ONLY === "true") {
-        console.log('PROXY_ONLY = true, get Merchant directly from Paypal')
         const response = await getMerchantIntegration(partner_id, merchant_id);
+        console.log('PROXY_ONLY = true, get Merchant directly from Paypal: ', JSON.stringify(response.data))
         return res.json(response.data);
       }
 
-      // get from db
-      let merchant = await db.Merchant.findOne({ merchant_id });
-      if (merchant) {
-        console.log('PROXY_ONLY = false, return Merchant from MongoDB')
-        return res.json(merchant);
-      }
       const response = await getMerchantIntegration(partner_id, merchant_id);
 
+      // need to custom payments_receivable, primary_email_confirmed for testing so skip it
+      const { merchant_id: _, payments_receivable, primary_email_confirmed, ...update } = response.data
+      // get from db then update
+      let merchant = await db.Merchant.findOneAndUpdate({ merchant_id }, update, {
+        new: true,
+      });
+      if (merchant) {
+        console.log('update and return Merchant from MongoDB: ', JSON.stringify(merchant))
+        return res.json(merchant);
+      }
+
+      // if not found from db
       // save to db for later request
       merchant = new db.Merchant(response.data);
       savedMerchant = await merchant.save();
-
-      console.log('PROXY_ONLY = false, get Merchant from PayPal then save to MongoDB')
+      console.log('get Merchant from PayPal then save to MongoDB: ', JSON.stringify(merchant))
       res.json(merchant);
     } catch (error) {
       handleError(error, res)
