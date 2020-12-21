@@ -56,8 +56,8 @@ app.get(
 
       const response = await getMerchantIntegration(partner_id, merchant_id);
 
-      // need to custom payments_receivable, primary_email_confirmed for testing so skip it
-      const { merchant_id: _, payments_receivable, primary_email_confirmed, ...update } = response.data
+      // need to custom payments_receivable, primary_email_confirmed, oauth_integrations for testing so skip it
+      const { merchant_id: _, payments_receivable, primary_email_confirmed, oauth_integrations, ...update } = response.data
       // get from db then update
       let merchant = await db.Merchant.findOneAndUpdate({ merchant_id }, update, {
         new: true,
